@@ -1,0 +1,218 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2018/11/13 18:09:36
+// Design Name: 
+// Module Name: Traffic_lights
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+`define width 2
+`define GNS 2'b00
+`define YNS 2'b01
+`define GEW 2'b11
+`define YEW 2'b10
+
+`define GNSL 6'b100_001
+`define YNSL 6'b010_001
+`define GEWL 6'b001_100
+`define YEWL 6'b001_010
+
+/*
+`define width 2
+`define GNS 2'b1000
+`define YNS 2'b0100
+`define GEW 2'b0010
+`define YEW 2'b0001
+*/
+module Traffic_lights(clk , rst ,carew,lights);
+    input clk;
+    input rst;
+    input carew;
+    output [5:0] lights;
+    wire[`width-1:0] cur_state;
+    reg[5:0] lights,next_state;
+    
+    DFF #(`width) traff(clk,next_state,cur_state);
+    
+    always @ (*)
+        begin
+            if(rst==1'b1)
+                next_state = `GNS;
+            else
+            case(cur_state)
+                `GNS:{next_state,lights}={(carew?`YNS:`GNS),`GNSL};
+                `YNS:{next_state,lights}={`GEW,`YNSL};
+                `GEW:{next_state,lights}={`YEW,`GEWL};
+                `YEW:{next_state,lights}={`GNS,`YEWL};
+                default:{next_state,lights}={`width+6{1'bx}};
+            endcase
+        end
+endmodule
+
+
+
+
+
+
+
+
+`timescale 1ns / 1ps
+
+module traffic_lights_tb;
+ reg clk,rst,carew;
+ wire [5:0] lights;
+ 
+ Traffic_lights t1(clk,rst,carew,lights);
+ 
+ initial
+ begin
+     clk=1;
+     #5 clk=0;
+     forever
+     begin
+        $display("%b %b %b %b",rst,carew,t1.cur_state,lights);
+        #5 clk=1;
+        #5 clk=0;
+     end
+  end
+  
+  initial
+  begin
+      rst = 0; carwe=0;
+      #15 rst=1; carew=0;
+      #10 rst=0;
+      #20 carew=1;
+      #30 carew=0;
+      #40 carew=1;
+      #60
+      $stop;
+  end
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2018/11/13 18:09:36
+// Design Name: 
+// Module Name: Traffic_lights
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+`define width 2
+`define GNS 2'b00
+`define YNS 2'b01
+`define GEW 2'b11
+`define YEW 2'b10
+
+`define GNSL 6'b100001
+`define YNSL 6'b010001
+`define GEWL 6'b001100
+`define YEWL 6'b001010
+
+/*
+`define width 2
+`define GNS 2'b1000
+`define YNS 2'b0100
+`define GEW 2'b0010
+`define YEW 2'b0001
+*/
+module Traffic_lights(clk , rst ,carew,lights);
+    input clk;
+    input rst;
+    input carew;
+    output [5:0] lights;
+    wire[`width-1:0] cur_state,next_state;
+    reg[`width-1:0] next1;
+    reg[5:0] lights;
+    DFF #(`width) traff(clk,next_state,cur_state);
+    
+    always @ (*)
+        begin
+            case(cur_state)
+                `GNS:{next1,lights}={(carew?`YNS:`GNS),`GNSL};
+                `YNS:{next1,lights}={`GEW,`YNSL};
+                `GEW:{next1,lights}={`YEW,`GEWL};
+                `YEW:{next1,lights}={`GNS,`YEWL};
+                default:{next1,lights}={`width+6{1'bx}};
+            endcase
+        end
+        assign next_state = rst ? `GNS: next1;
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module DFF(clk,in,out);
+  parameter n = 1;
+  input clk;
+  input [n-1:0] in;
+  output [n-1:0] out;
+  reg [n-1:0] out;
+  
+  always @(posedge clk)
+    out = in;
+endmodule
