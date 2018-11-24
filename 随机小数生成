@@ -1,0 +1,33 @@
+#include <iostream>
+#include<stdlib.h>
+#include<time.h>
+#include<iomanip>
+using namespace std;
+
+
+int main()
+{
+    /*
+    int N=999999999,x;
+    double num[50];                
+    srand(time(NULL));            
+	for (int i=0;i<50;i++)
+	{
+	    x=rand();
+		num[i]=(x*x)%(N+1)/(double)(N+1);
+		cout<<num[i]<<endl;
+	}
+*/
+
+
+
+    int N=8999999,x;
+    double num[50];            
+    srand(time(NULL));    
+	for (int i=0;i<50;i++)
+	{
+	    x=rand();
+		num[i]=((x*x)%N+1000000)/(double)10000000;
+		cout<<fixed<<setprecision(7)<<num[i]<<endl;
+	}
+}
