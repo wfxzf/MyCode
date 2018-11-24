@@ -1,2 +1,2 @@
-# test
-实验创建一个github仓库
+# MyCode
+cs 从删库到跑路
