@@ -1,0 +1,64 @@
+//DFF
+module DFF(clk,in,out);
+  parameter n = 1;
+  input clk;
+  input [n-1:0] in;
+  output [n-1:0] out;
+  reg [n-1:0] out;
+  
+  always @(posedge clk)
+    out = in;
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+module Johnson_counter_tb;
+ reg clk,rst;
+ wire [3:0]out;
+ Johnson_counter  mycou (clk,rst,out);
+ 
+ initial
+ begin
+     clk=1;
+     #5 clk=0;
+     forever
+     begin
+        $display("%b",out);
+        #5 clk=1;
+        #5 clk=0;
+     end
+  end
+  
+  initial
+  begin
+      //rst = 1; up=1;down =1;load=0;in=5;
+       rst = 1;
+      #20 rst = 0;
+      #200
+      $stop;
+  end
+endmodule
+
+
+
+
+
+module Johnson_counter(clk,rst,out);
+    parameter n = 4;
+    input clk,rst;
+    output [n-1:0]out;
+    wire [n-1:0]next;
+    
+    DFF #(n) count(clk,next,out);
+   
+   assign next = rst?0:{out[2:0],~out[3]};
+   
+endmodule

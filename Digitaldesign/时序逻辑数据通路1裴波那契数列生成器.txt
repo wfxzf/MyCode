@@ -1,0 +1,92 @@
+//DFF
+module DFF(clk,in,out);
+  parameter n = 1;
+  input clk;
+  input [n-1:0] in;
+  output [n-1:0] out;
+  reg [n-1:0] out;
+  
+  always @(posedge clk)
+    out = in;
+endmodule
+
+
+
+
+
+
+
+
+
+`timescale 1ns / 1ps
+
+module Fib_generator( clk,out1,out2,rst );
+    input clk,rst;
+    output [15:0]out1;
+    output [15:0]out2;
+    reg [15:0]next1;
+
+    wire [15:0]out1;
+    wire [15:0]out2;
+    
+    DFF #(16) MY_DFF(clk,next1,out1);
+    DFF #(16) MY1_DFF(clk,out1,out2);
+    
+    always @(*)
+    begin
+      case(rst)
+      1'b1: next1=16'b1;
+      1'b0: next1=out1+out2;
+      endcase
+    end
+    
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//≤‚ ‘∆ΩÃ®
+`timescale 1ns / 1ps
+
+module Fib_generator_tb;
+reg clk;
+wire [15:0]out1;
+wire [15:0]out2;
+reg rst;
+Fib_generator cou ( clk,out1,out2,rst );
+
+initial
+ begin
+     clk=1;
+     #5 clk=0;
+     forever
+     begin
+        $display("%b",out1);
+        #5 clk=1;
+        #5 clk=0;
+     end
+  end
+  
+  initial
+  begin
+      rst = 1;
+      #100 
+      rst = 0;
+      #1000
+      $stop;
+  end
+
+endmodule

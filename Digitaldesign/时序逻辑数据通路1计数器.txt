@@ -1,0 +1,82 @@
+//DFF
+module DFF(clk,in,out);
+  parameter n = 1;
+  input clk;
+  input [n-1:0] in;
+  output [n-1:0] out;
+  reg [n-1:0] out;
+  
+  always @(posedge clk)
+    out = in;
+endmodule
+
+
+
+
+
+//≤‚ ‘∆ΩÃ®
+module counter_tb;
+ reg clk,rst,up,down,load;
+ reg [3:0]in;
+ wire [3:0]out;
+ counter  mycou (clk,rst,up,down,load,in,out);
+ 
+ initial
+ begin
+     clk=1;
+     #5 clk=0;
+     forever
+     begin
+        $display("%b %b",in,out);
+        #5 clk=1;
+        #5 clk=0;
+     end
+  end
+  
+  initial
+  begin
+      //rst = 1; up=1;down =1;load=0;in=5;
+       rst = 1; up=1;down =1;load=0;
+      in=3'b101;
+      #100 rst = 0; up=0;down =0;load=1;
+      #100 rst = 0; up=1;down =0;load=0;
+      #100rst = 0; up=0;down =1;load=0;
+      #100 rst = 0; up=1;down =0;load=0;
+      #10
+      $stop;
+  end
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//counter
+module counter(clk,rst,up,down,load,in,out);
+    parameter n = 4;
+    input clk,rst,up,down,load;
+    input [n-1:0]in;
+    output [n-1:0]out;
+    reg [n-1:0]next;
+    DFF #(n) count(clk,next,out);
+    
+    always @(*) 
+    begin
+        casex ({rst,up,down,load})
+           4'b1xxx:next= {n {1'b0}};
+           4'b01xx:next=out+1;
+           4'b001x:next=out-1;
+           4'b0001:next = in;
+           default:next=out;
+        endcase
+    end
+endmodule
