@@ -1,0 +1,15 @@
+$ git config --global http.proxy 'socks5://127.0.0.1:1080'
+
+90651@DESKTOP-H7CI3NH MINGW64 ~/Desktop
+$ git config --global https.proxy 'socks5://127.0.0.1:1080'
+
+
+在终端中直接运行：
+
+export http_proxy=http://proxyAddress:port
+如果你是SSR,并且走的http的代理端口是12333，想执行wget或者curl来下载国外的东西，可以使用如下命令：
+
+export http_proxy=http://127.0.0.1:12333
+如果是https那么就经过如下命令：
+
+export https_proxy=http://127.0.0.1:12333
